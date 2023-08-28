@@ -2,14 +2,13 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "2.71.0"
+      version = ">= 3.0.0"
     }
     random = {
-      version = ">= 2.2.1"
+      version = ">= 3.0.0"
     }
   }
 
-  backend "azurerm" {}
 }
 
 provider "azurerm" {
@@ -23,7 +22,6 @@ data "azurerm_client_config" "current" {
 resource "random_pet" "deployment" {
   separator = ""
   length    = 2
-  prefix    = ""
   keepers = {
     azurerm_resource_group_location = azurerm_resource_group.deployment.location
     azurerm_resource_group_name     = azurerm_resource_group.deployment.name
@@ -31,7 +29,7 @@ resource "random_pet" "deployment" {
 }
 
 resource "azurerm_resource_group" "deployment" {
-  name     = "locust-${var.prefix}-rg"
+  name     = var.resource_group
   location = var.location
   tags     = local.default_tags
 }

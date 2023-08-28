@@ -1,7 +1,13 @@
 variable "location" {
-  description = "The Azure Region in which the master and the shared storage account will be provisioned."
+  description = "The Azure Region in which the controller and the shared storage account will be provisioned."
   type        = string
   default     = "northeurope"
+}
+
+variable "resource_group" {
+  description = "Resource group name. Must not contain any special characters."
+  type        = string
+  default     = "locust-on-aci"
 }
 
 variable "environment" {
@@ -10,10 +16,16 @@ variable "environment" {
   default     = "dev"
 }
 
+variable "use_acr" {
+  description = "Provision and use Azure Container Registry"
+  type        = bool
+  default     = true
+}
+
 variable "locust_container_image" {
   description = "Locust Container Image"
   type        = string
-  default     = "sebader/locust-with-plugins:latest"
+  default     = "locustio/locust:latest"
 }
 
 variable "targeturl" {
@@ -23,7 +35,7 @@ variable "targeturl" {
 }
 
 variable "locustWorkerNodes" {
-  description = "Number of Locust worker instances (zero will stop master)"
+  description = "Number of Locust worker instances (zero will stop controller)"
   type        = string
   default     = "0"
 }
@@ -62,13 +74,4 @@ variable "locustWorkerLocations" {
     "westcentralus",
     "westus2"
   ]
-}
-
-variable "prefix" {
-  description = "A prefix used for the resource group. Must not contain any special characters. Must not be longer than 10 characters."
-  type        = string
-  validation {
-    condition     = length(var.prefix) >= 5 && length(var.prefix) <= 10
-    error_message = "Prefix must be between 5 and 10 characters long."
-  }
 }
